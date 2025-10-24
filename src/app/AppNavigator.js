@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../app/HomeScreen';
 import LessonScreen from '../screens/LessonScreen';
 import PracticeScreen from '../screens/PracticeScreen';
 

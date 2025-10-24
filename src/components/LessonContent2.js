@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Svg, { Line } from 'react-native-svg';
 import Dot from './common/Dot';
 
@@ -101,53 +102,55 @@ export default function LessonContent2() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Kéo từ A sang B hoặc ngược lại</Text>
+    <GestureHandlerRootView style={styles.container}>
+      <View>
+        <Text style={styles.title}>Kéo từ A sang B hoặc ngược lại</Text>
 
-      <Svg height={height} width={width} style={styles.svg}>
-        {connections.map(c => (
-          <Line
-            key={c.id}
-            x1={c.x1}
-            y1={c.y1}
-            x2={c.x2}
-            y2={c.y2}
-            stroke="#4CAF50"
-            strokeWidth="4"
+        <Svg height={height} width={width} style={styles.svg}>
+          {connections.map(c => (
+            <Line
+              key={c.id}
+              x1={c.x1}
+              y1={c.y1}
+              x2={c.x2}
+              y2={c.y2}
+              stroke="#4CAF50"
+              strokeWidth="4"
+            />
+          ))}
+
+          {currentLine && (
+            <Line
+              x1={currentLine.x1}
+              y1={currentLine.y1}
+              x2={currentLine.x2}
+              y2={currentLine.y2}
+              stroke="#2196F3"
+              strokeWidth="3"
+              strokeDasharray="5,5"
+            />
+          )}
+        </Svg>
+
+        {allDots.map(dot => (
+          <Dot
+            key={dot.id}
+            dot={dot}
+            isDotConnected={isDotConnected}
+            draggedDotId={draggedDotId}
+            onPanResponderGrant={handlePanResponderGrant}
+            onPanResponderMove={handlePanResponderMove}
+            onPanResponderRelease={handlePanResponderRelease}
           />
         ))}
 
-        {currentLine && (
-          <Line
-            x1={currentLine.x1}
-            y1={currentLine.y1}
-            x2={currentLine.x2}
-            y2={currentLine.y2}
-            stroke="#2196F3"
-            strokeWidth="3"
-            strokeDasharray="5,5"
-          />
-        )}
-      </Svg>
-
-      {allDots.map(dot => (
-        <Dot
-          key={dot.id}
-          dot={dot}
-          isDotConnected={isDotConnected}
-          draggedDotId={draggedDotId}
-          onPanResponderGrant={handlePanResponderGrant}
-          onPanResponderMove={handlePanResponderMove}
-          onPanResponderRelease={handlePanResponderRelease}
-        />
-      ))}
-
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>
-          Đã kết nối: {connections.length}/{dotsA.length}
-        </Text>
+        <View style={styles.counter}>
+          <Text style={styles.counterText}>
+            Đã kết nối: {connections.length}/{dotsA.length}
+          </Text>
+        </View>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

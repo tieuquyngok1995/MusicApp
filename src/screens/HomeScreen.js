@@ -1,85 +1,104 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import CircleButton from '../components/common/CircleButton';
-import Colors from '../constants/Colors';
-import Audios from '../constants/Audios';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import LessonCard from '../components/LessonCard';
+import LessonScreen from './LessonScreen';
 
-export default function HomeScreen({ navigation }) {
+const bottomBarHeight = 60;
+
+const lessons = Array.from({ length: 10 }).map((_, i) => ({
+  id: `lesson${(i + 1).toString().padStart(3, '0')}`,
+  title: `Bài học ${i + 1}`,
+  description: `Mô tả cho bài học ${i + 1}`,
+  image: 'https://via.placeholder.com/100', // ảnh đại diện bài học
+}));
+
+const HomeScreen = () => {
+  const [selectedLessonId, setSelectedLessonId] = useState(null);
+
+  const handlePress = lesson => {
+    console.log('Bấm vào bài học:', lesson.title);
+    setSelectedLessonId(lesson.id);
+  };
+
+  const handleSettings = () => {
+    console.log('Mở màn hình Settings');
+  };
+
+  const handleUpdate = () => {
+    console.log('Mở màn hình Update');
+  };
+
+  if (selectedLessonId) {
+    return <LessonScreen lessonId={selectedLessonId} lessonData={'data'} />;
+  }
   return (
-    <ImageBackground
-      source={require('../assets/images/background.jpg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Home Screen</Text>
-
-        <View style={{ flex: 1 }}>
-          <CircleButton
-            color={Colors.C}
-            audioFile={Audios.C}
-            style={{ position: 'absolute', top: 370, left: -420 }}
-          />
-          <CircleButton
-            color={Colors.D}
-            audioFile={Audios.D}
-            style={{ position: 'absolute', top: 325, left: -295 }}
-          />
-          <CircleButton
-            color={Colors.E}
-            audioFile={Audios.E}
-            style={{ position: 'absolute', top: 280, left: -170 }}
-          />
-          <CircleButton
-            color={Colors.F}
-            audioFile={Audios.F}
-            style={{ position: 'absolute', top: 230, left: -50 }}
-          />
-          <CircleButton
-            color={Colors.G}
-            audioFile={Audios.G}
-            style={{ position: 'absolute', top: 185, left: 65 }}
-          />
-          <CircleButton
-            color={Colors.A}
-            audioFile={Audios.A}
-            style={{ position: 'absolute', top: 140, left: 190 }}
-          />
-          <CircleButton
-            color={Colors.B}
-            audioFile={Audios.B}
-            style={{ position: 'absolute', top: 90, left: 315 }}
-          />
-          <CircleButton
-            color={Colors.C}
-            audioFile={Audios.C2}
-            style={{ position: 'absolute', top: 45, left: 440 }}
-          />
-        </View>
+    <View style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      <FlatList
+        data={lessons}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <LessonCard lesson={item} onPress={() => handlePress(item)} />
+        )}
+        contentContainerStyle={{
+          paddingLeft: 10,
+          paddingBottom: bottomBarHeight,
+        }}
+      />
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.button} onPress={handleSettings}>
+          <Text style={styles.buttonText}>Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#e67e22' }]}
+          onPress={handleUpdate}
+        >
+          <Text style={styles.buttonText}>Update</Text>
+        </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 30,
-  },
-  buttonRow: {
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
     flexDirection: 'row',
-    gap: 10,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    backgroundColor: '#3498db',
+    borderRadius: 30,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
+
+export default HomeScreen;
