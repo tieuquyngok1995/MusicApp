@@ -1,13 +1,11 @@
-import React from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import CircleButton from '../components/common/CircleButton';
-import Colors from '../constants/Colors';
-import Audios from '../constants/Audios';
+import CircleButton from '../common/buttons/CircleButton';
+import { Colors, Audios } from '../../constants';
 
-export default function HomeScreen({ navigation }) {
+export default function LessonContent3() {
   return (
     <ImageBackground
-      source={require('../assets/images/background.jpg')}
+      source={require('../../assets/images/background.jpg')}
       style={styles.background}
       resizeMode="cover"
     >

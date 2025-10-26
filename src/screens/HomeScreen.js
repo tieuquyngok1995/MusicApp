@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import LessonCard from '../components/LessonCard';
+import LessonCard from '@/components/layouts/LessonCard';
 import LessonScreen from './LessonScreen';
 
 const bottomBarHeight = 60;

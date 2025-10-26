@@ -6,8 +6,6 @@ const DropCircle = React.forwardRef(({ style }, ref) => {
   return <Animated.View ref={ref} style={[styles.dropCircle, style]} />;
 });
 
-export default DropCircle;
-
 const styles = StyleSheet.create({
   dropCircle: {
     width: 90,
@@ -17,3 +15,5 @@ const styles = StyleSheet.create({
     borderColor: '#000',
   },
 });
+
+export default DropCircle;

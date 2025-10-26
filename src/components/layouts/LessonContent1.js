@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 import { useAnimatedRef, measure, runOnJS } from 'react-native-reanimated';
-import CircleButton from './common/CircleButton';
-import DropCircle from './common/DropCircle';
-import Colors from '../constants/Colors';
-import Audios from '../constants/Audios';
+import { CircleButton, DropCircle } from '@/components/common';
+import { Colors, Audios } from '../../constants';
 import {
   GestureHandlerRootView,
   GestureDetector,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Svg, { Line } from 'react-native-svg';
-import Dot from './common/Dot';
+import Dot from '../common/buttons/DotButton';
 
 const { width, height } = Dimensions.get('window');
 

@@ -6,9 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Logo -->
     <ImageView
         android:src="@mipmap/ic_launcher"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center" />
+
+    <!-- Khoảng cách -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <!-- Text Loading -->
+    <TextView
+        android:text="Do Re Mi... Loading!"
+        android:textSize="18sp"
+        android:textColor="#555555"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Loading spinner -->
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

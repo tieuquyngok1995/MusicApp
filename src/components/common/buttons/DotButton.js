@@ -3,14 +3,14 @@ import { StyleSheet, Text } from 'react-native';
 import Animated, { runOnJS } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-export default function Dot({
+const DotButton = ({
   dot,
   isDotConnected,
   draggedDotId,
   onPanResponderGrant,
   onPanResponderMove,
   onPanResponderRelease,
-}) {
+}) => {
   const getDotColor = () => {
     if (isDotConnected(dot.id)) return '#4CAF50';
     if (draggedDotId === dot.id) return '#2196F3';
@@ -51,7 +51,7 @@ export default function Dot({
       </Animated.View>
     </GestureDetector>
   );
-}
+};
 
 const styles = StyleSheet.create({
   dot: {
@@ -69,3 +69,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default DotButton;
