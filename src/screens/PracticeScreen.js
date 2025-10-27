@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, Button } from 'react-native';
-import { MusicContext } from '../context/MusicContext';
+import { MusicContext } from '../contexts/MusicContext';
 
 export default function LessonScreen() {
   const { playLesson, currentLesson, isPlaying } = useContext(MusicContext);

@@ -2,14 +2,13 @@ import React, { useEffect } from 'react';
 import { View, Button, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { clearAllLazyModules } from '@utils/LazyLoader';
-import { LessonCommon } from '@components/layouts';
+import LessonCommon from '@screens/LessonCommon';
 
-export default function LessonScreen({ lessonId, lessonData }) {
-  const navigation = useNavigation();
+export default function LessonScreen({ route, navigation }) {
+  const { lessonId, isColorRhythm } = route.params ?? {};
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      // Khi rời khỏi LessonScreen (ví dụ quay về Home)
       clearAllLazyModules();
     });
 
@@ -34,8 +33,7 @@ export default function LessonScreen({ lessonId, lessonData }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Button title="Quay lại" onPress={goHome} />
-      <LessonCommon lessonId={lessonId} lessonData={lessonData} />
+      <LessonCommon lessonId={lessonId} isColorRhythm={isColorRhythm} />
     </View>
   );
 }
