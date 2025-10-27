@@ -9,10 +9,12 @@ module.exports = {
         alias: {
           '@': './src',
           '@screens': './src/screens',
+          '@lessons': './src/screens/lessons',
+          '@contexts': './src/contexts',
           '@components': './src/components',
-          '@lesson': './src/components/lesson',
           '@constants': './src/constants',
           '@utils': './src/utils',
+          '@assets': './src/assets',
         },
       },
     ],
