@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import { CircleButton } from '@components';
+import { CircleButton } from '@components/buttons';
 import { Colors, Audios } from '@constants';
 
 export default function ColorIdentifying() {
@@ -16,42 +16,42 @@ export default function ColorIdentifying() {
           <CircleButton
             color={Colors.C}
             audioFile={Audios.C}
-            style={{ position: 'absolute', top: 370, left: -420 }}
+            style={{ position: 'absolute', top: 390, left: -420 }}
           />
           <CircleButton
             color={Colors.D}
             audioFile={Audios.D}
-            style={{ position: 'absolute', top: 325, left: -295 }}
+            style={{ position: 'absolute', top: 345, left: -295 }}
           />
           <CircleButton
             color={Colors.E}
             audioFile={Audios.E}
-            style={{ position: 'absolute', top: 280, left: -170 }}
+            style={{ position: 'absolute', top: 300, left: -170 }}
           />
           <CircleButton
             color={Colors.F}
             audioFile={Audios.F}
-            style={{ position: 'absolute', top: 230, left: -50 }}
+            style={{ position: 'absolute', top: 250, left: -50 }}
           />
           <CircleButton
             color={Colors.G}
             audioFile={Audios.G}
-            style={{ position: 'absolute', top: 185, left: 65 }}
+            style={{ position: 'absolute', top: 205, left: 65 }}
           />
           <CircleButton
             color={Colors.A}
             audioFile={Audios.A}
-            style={{ position: 'absolute', top: 140, left: 190 }}
+            style={{ position: 'absolute', top: 160, left: 190 }}
           />
           <CircleButton
             color={Colors.B}
             audioFile={Audios.B}
-            style={{ position: 'absolute', top: 90, left: 315 }}
+            style={{ position: 'absolute', top: 110, left: 315 }}
           />
           <CircleButton
             color={Colors.C}
             audioFile={Audios.C2}
-            style={{ position: 'absolute', top: 45, left: 440 }}
+            style={{ position: 'absolute', top: 65, left: 440 }}
           />
         </View>
       </View>

@@ -1,13 +1,14 @@
 const Audios = {
-  C: 'C.mid',
-  D: 'D.mid',
-  E: 'E.mid',
-  F: 'F.mid',
-  G: 'G.mid',
-  A: 'A.mid',
-  B: 'B.mid',
-  C2: 'C2.mid',
-  default: 'C.mid',
+  C: 'c.mid',
+  D: 'd.mid',
+  E: 'e.mid',
+  F: 'f.mid',
+  G: 'g.mid',
+  A: 'a.mid',
+  B: 'b.mid',
+  C2: 'c2.mid',
+  NOTE: 'note.wav',
+  default: 'c.mid',
 };
 
 export default Audios;

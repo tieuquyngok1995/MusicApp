@@ -49,6 +49,9 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     try {
       // Kiểm tra lesson tồn tại
       if (!LessonRegistry[lessonId]) {
+        console.error(
+          `[LessonCommon] Không tìm thấy lesson dang ky trong Lesson Registry"${lessonId}"`,
+        );
         return;
       }
 

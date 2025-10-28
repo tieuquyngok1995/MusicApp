@@ -8,36 +8,39 @@ const lazyCache = new Map();
 export function loadLazyModule(importFn, key) {
   // Nếu đã có lazy component được tạo, dùng lại
   if (lazyCache.has(key)) {
-    console.log(`[Lazy] ♻️ Reusing lazy component: ${key}`);
+    console.log(`[Lazy] Reusing lazy component: ${key}`);
     return lazyCache.get(key);
   }
 
-  console.log(`[Lazy] 🆕 Creating new lazy component: ${key}`);
+  console.log(`[Lazy] Creating new lazy component: ${key}`);
 
   const LazyComp = lazy(async () => {
     // Kiểm tra cache module
     if (moduleCache.has(key)) {
-      console.log(`[Lazy] 📦 Using cached module: ${key}`);
+      console.log(`[Lazy] Using cached module: ${key}`);
       return moduleCache.get(key);
     }
 
     try {
-      console.log(`[Lazy] 📥 Loading module: ${key}`);
+      console.log(`[Lazy] Loading module: ${key}`);
       const mod = await importFn();
 
       if (!mod || !mod.default) {
-        console.warn(`[Lazy] ⚠️ Module ${key} has no default export!`);
+        console.warn(`[Lazy] Module ${key} has no default export!`);
         throw new Error(`Module ${key} must have a default export`);
       }
 
       // Cache module
       const cachedModule = { default: mod.default };
       moduleCache.set(key, cachedModule);
-      console.log(`[Lazy] ✅ Module loaded and cached: ${key}`);
+      console.log(`[Lazy] Module loaded and cached: ${key}`);
 
+      console.log(
+        `[Lazy] Module loaded and cached: ${key}, Loaded (${moduleCache.size} modules, ${lazyCache.size} lazy components)`,
+      );
       return cachedModule;
     } catch (err) {
-      console.error(`[Lazy] ❌ Failed to load module ${key}:`, err);
+      console.error(`[Lazy] Failed to load module ${key}:`, err);
       // Xóa cache nếu load thất bại
       moduleCache.delete(key);
       lazyCache.delete(key);
@@ -53,11 +56,11 @@ export function loadLazyModule(importFn, key) {
 // Xóa cache 1 module cụ thể
 export function clearLazyModule(key) {
   if (moduleCache.has(key) || lazyCache.has(key)) {
-    console.log(`[Lazy] 🗑️ Clearing cached module: ${key}`);
+    console.log(`[Lazy] Clearing cached module: ${key}`);
     moduleCache.delete(key);
     lazyCache.delete(key);
   } else {
-    console.log(`[Lazy] ℹ️ Module ${key} not in cache`);
+    console.log(`[Lazy] Module ${key} not in cache`);
   }
 }
 
@@ -72,7 +75,7 @@ export function clearAllLazyModules() {
   moduleCache.clear();
   lazyCache.clear();
 
-  console.log('[Lazy] ✅ All caches cleared');
+  console.log('[Lazy] All caches cleared');
 }
 
 // Debug: Xem các module đang được cache

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 import { useAnimatedRef, measure, runOnJS } from 'react-native-reanimated';
-import { CircleButton, DropCircle } from '@components';
+import { CircleButton, DropCircle } from '@components/buttons';
 import { Colors, Audios } from '@constants';
 import {
   GestureHandlerRootView,
