@@ -15,6 +15,7 @@ module.exports = {
           '@constants': './src/constants',
           '@utils': './src/utils',
           '@assets': './src/assets',
+          '@icons': './src/assets/icons',
         },
       },
     ],
