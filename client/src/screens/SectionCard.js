@@ -1,5 +1,5 @@
-import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
 const SectionCard = ({ title, icon, onPress, style, textStyle }) => {
   return (
@@ -14,6 +14,17 @@ const SectionCard = ({ title, icon, onPress, style, textStyle }) => {
       </View>
     </TouchableOpacity>
   );
+};
+
+SectionCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.oneOfType([
+    PropTypes.number, // nếu icon là require('...') local
+    PropTypes.object, // nếu icon là { uri: '...' }
+  ]),
+  onPress: PropTypes.func,
+  style: PropTypes.object,
+  textStyle: PropTypes.object,
 };
 
 const styles = StyleSheet.create({

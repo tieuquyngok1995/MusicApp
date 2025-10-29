@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 import Slider from '@react-native-community/slider';
+import PropTypes from 'prop-types';
 
 export default function GreetingSection({ videoUri, lyrics }) {
   const videoRef = useRef(null);
@@ -62,6 +63,11 @@ export default function GreetingSection({ videoUri, lyrics }) {
     </View>
   );
 }
+
+GreetingSection.propTypes = {
+  videoUri: PropTypes.string.isRequired,
+  lyrics: PropTypes.arrayOf(PropTypes.string),
+};
 
 const styles = StyleSheet.create({
   container: {

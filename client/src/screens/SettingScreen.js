@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { saveLessonStates, loadLessonStates } from '../utils/Storage';
+import { saveLessonStates, loadLessonStates } from '@utils/storage';
 import img from '@assets/images/image.jpg';
 
 const defaultLessons = Array.from({ length: 32 }).map((_, i) => ({

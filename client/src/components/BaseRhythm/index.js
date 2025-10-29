@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Animated, Image } from 'react-native';
 import Sound from 'react-native-sound';
+import PropTypes from 'prop-types';
 import DefaultNoteIcon from '@assets/icons/note-crotchet.png';
 import {
   styles as defaultStyles,
@@ -86,7 +87,9 @@ export default function BaseRhythm({
     if (startTsRef.current)
       pausedAtRef.current += (Date.now() - startTsRef.current) / 1000;
     startTsRef.current = null;
-    rafRef.current && cancelAnimationFrame(rafRef.current);
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
   };
 
   const onForward = () => {
@@ -98,14 +101,12 @@ export default function BaseRhythm({
     pausedAtRef.current = newTime;
     startTsRef.current = isPlaying ? Date.now() : null;
 
-    // Cập nhật progress bar ngay
     progress.setValue(newTime / duration);
 
     if (!isPlaying) {
       rafRef.current = requestAnimationFrame(tick);
     }
 
-    // Xóa note đã chơi sau vị trí mới
     playedNotesRef.current = new Set(
       notes.filter(n => n.time < newTime).map(n => n.id),
     );
@@ -120,10 +121,8 @@ export default function BaseRhythm({
     pausedAtRef.current = newTime;
     startTsRef.current = isPlaying ? Date.now() : null;
 
-    // Cập nhật progress bar ngay
     progress.setValue(newTime / duration);
 
-    // Xóa note đã chơi sau vị trí mới
     playedNotesRef.current = new Set(
       notes.filter(n => n.time < newTime).map(n => n.id),
     );
@@ -139,11 +138,13 @@ export default function BaseRhythm({
     pausedAtRef.current = 0;
     playedNotesRef.current.clear();
     progress.setValue(0);
-    rafRef.current && cancelAnimationFrame(rafRef.current);
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
   };
 
-  const renderMarkers = () => {
-    return notes.map(n => {
+  const renderMarkers = () =>
+    notes.map(n => {
       const left = (n.time / duration) * PROGRESS_WIDTH;
       return (
         <View
@@ -165,7 +166,6 @@ export default function BaseRhythm({
         </View>
       );
     });
-  };
 
   const progressBarWidth = progress.interpolate({
     inputRange: [0, 1],
@@ -244,3 +244,23 @@ export default function BaseRhythm({
     </View>
   );
 }
+
+BaseRhythm.propTypes = {
+  duration: PropTypes.number,
+  tempo: PropTypes.number,
+  notes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      time: PropTypes.number.isRequired,
+      soundIndex: PropTypes.number,
+    }),
+  ),
+  noteSounds: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  ),
+  noteIcon: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({ uri: PropTypes.string }),
+  ]),
+  styleOverrides: PropTypes.object,
+};

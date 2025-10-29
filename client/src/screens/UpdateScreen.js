@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,18 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFS from 'react-native-fs';
 import { useNavigation } from '@react-navigation/native';
-import { unzip } from 'react-native-zip-archive';
+import {
+  fetchLessonMetadata,
+  getLessonDownloadUrl,
+} from '@services/lessonService';
+import {
+  ensureLessonFolder,
+  downloadLessonZip,
+  unzipLesson,
+  checkLessonFolder,
+} from '@utils/fileUtils';
+import RNFS from 'react-native-fs';
 
 // Đường dẫn thư mục gốc lưu dữ liệu
 const LESSONS_DIR = `${RNFS.DocumentDirectoryPath}/lessons`;
@@ -26,68 +35,39 @@ const UpdateScreen = () => {
   const loadLessons = useCallback(async () => {
     setLoading(true);
     try {
-      // 1️⃣ Load dữ liệu local
       const allLessonsRawStr = await AsyncStorage.getItem('lessonsData');
-      if (!allLessonsRawStr) {
-        setLessons([]);
-        return;
-      }
+      if (!allLessonsRawStr) return setLessons([]);
 
       const allLessonsRaw = JSON.parse(allLessonsRawStr);
-
-      // Lọc các bài active
       const activeLessons = allLessonsRaw.filter(l => l.active);
-      if (activeLessons.length === 0) {
-        setLessons([]);
-        return;
-      }
+      if (activeLessons.length === 0) return setLessons([]);
 
-      // 2️⃣ Gọi API metadata để lấy dữ liệu mới nhất
       const lessonIds = activeLessons.map(l => l.id);
-      const response = await fetch(`${API_BASE}/metadata`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lessons: lessonIds }),
-      });
+      const latestMetaData = await fetchLessonMetadata(lessonIds);
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const latestMetaData = await response.json();
-      console.log('123');
-      console.log(JSON.stringify(latestMetaData, null, 2));
-
-      // 3️⃣ Merge metadata và xác định status
       let hasChanges = false;
       const updatedLessons = await Promise.all(
         allLessonsRaw.map(async lesson => {
           const meta = latestMetaData.lessons[lesson.id];
-          if (!meta) return lesson; // nếu server không trả metadata → giữ nguyên
+          if (!meta) return lesson;
 
-          // Cập nhật version, hash, apiUrl nếu khác hoặc trống
           const updatedLesson = { ...lesson };
-          ['version', 'hash', 'apiUrl'].forEach(key => {
-            if (!lesson[key] || lesson[key] !== meta[key]) {
-              updatedLesson[key] = meta[key];
+          ['version', 'hash', 'apiUrl'].forEach(k => {
+            if (!lesson[k] || lesson[k] !== meta[k]) {
+              updatedLesson[k] = meta[k];
               hasChanges = true;
             }
           });
 
-          // Kiểm tra thư mục local để xác định trạng thái
-          const lessonDir = `${LESSONS_DIR}/${lesson.id}`;
-          const dirExists = await RNFS.exists(lessonDir);
-
+          const dirExists = await checkLessonFolder(lesson.id);
           if (!dirExists) {
             updatedLesson.status = 'not-exist';
           } else {
-            // Kiểm tra xem localMeta có outdated không
-            const localMeta = allLessonsRaw.find(l => l.id === lesson.id);
             const isOutdated =
-              !localMeta ||
-              localMeta.version !== meta.version ||
-              localMeta.hash !== meta.hash;
-            updatedLesson.version = meta.version;
+              !lesson.version ||
+              lesson.version !== meta.version ||
+              !lesson.hash ||
+              lesson.hash !== meta.hash;
             updatedLesson.status = isOutdated ? 'outdated' : 'up-to-date';
           }
 
@@ -95,16 +75,12 @@ const UpdateScreen = () => {
         }),
       );
 
-      // 4️⃣ Lưu lại nếu có thay đổi
-      if (hasChanges) {
+      if (hasChanges)
         await AsyncStorage.setItem(
           'lessonsData',
           JSON.stringify(updatedLessons),
         );
-        console.log('✅ Đã cập nhật lessonsData');
-      }
 
-      // 5️⃣ Cập nhật state để render layout
       setLessons(updatedLessons.filter(l => l.active));
     } catch (error) {
       console.error('Lỗi loadLessons:', error);
@@ -118,56 +94,28 @@ const UpdateScreen = () => {
     loadLessons();
   }, [loadLessons]);
 
-  // Hàm tải/cập nhật bài học (mô phỏng)
   const handleDownloadLesson = async lesson => {
     try {
       setLoading(true);
 
-      const lessonDir = `${LESSONS_DIR}/${lesson.id}`;
-      await RNFS.mkdir(lessonDir);
+      const lessonDir = await ensureLessonFolder(lesson.id);
+      const url = getLessonDownloadUrl(lesson.id);
+      const zipPath = await downloadLessonZip(url, lesson.id);
+      await unzipLesson(zipPath, lessonDir);
 
-      const zipPath = `${RNFS.CachesDirectoryPath}/${lesson.id}.zip`;
-      const url = `${API_BASE}/${lesson.id}/download`;
-
-      console.log('Bắt đầu tải:', url);
-
-      // Tải file zip từ server
-      const download = await RNFS.downloadFile({
-        fromUrl: url,
-        toFile: zipPath,
-        background: true,
-        discretionary: true,
-      }).promise;
-
-      if (download.statusCode !== 200) {
-        throw new Error(`Tải thất bại: HTTP ${download.statusCode}`);
-      }
-
-      console.log('Tải xong ZIP:', zipPath);
-
-      // Giải nén file zip vào thư mục bài học
-      const unzipResult = await unzip(zipPath, lessonDir);
-      console.log('Giải nén đến:', unzipResult);
-
-      // Xóa file zip sau khi giải nén
-      await RNFS.unlink(zipPath);
-
-      // 1️⃣ Cập nhật metadata cục bộ nếu cần (AsyncStorage)
+      // cập nhật AsyncStorage
       const metaRaw = await AsyncStorage.getItem('lessonMeta');
       const metaData = metaRaw ? JSON.parse(metaRaw) : {};
       metaData[lesson.id] = {
         ...lesson,
-        status: 'up-to-date', // đánh dấu đã tải xong
+        status: 'up-to-date',
         updatedAt: new Date().toISOString(),
       };
       await AsyncStorage.setItem('lessonMeta', JSON.stringify(metaData));
 
-      // 2️⃣ Cập nhật layout ngay lập tức
-      setLessons(prevLessons =>
-        prevLessons.map(l =>
-          l.id === lesson.id
-            ? { ...l, status: 'up-to-date', localHash: lesson.hash }
-            : l,
+      setLessons(prev =>
+        prev.map(l =>
+          l.id === lesson.id ? { ...l, status: 'up-to-date' } : l,
         ),
       );
 
@@ -180,6 +128,7 @@ const UpdateScreen = () => {
     }
   };
 
+  // phần render giữ nguyên
   if (loading) {
     return (
       <View style={styles.center}>
@@ -194,12 +143,12 @@ const UpdateScreen = () => {
       <Text style={styles.header}>Kiểm tra dữ liệu bài học</Text>
       {lessons.length === 0 ? (
         <Text style={styles.emptyText}>
-          Không có bài học nào được kích hoạt trong Setting.
+          Không có bài học nào được kích hoạt.
         </Text>
       ) : (
         <FlatList
           data={lessons}
-          keyExtractor={item => item.id}
+          keyExtractor={i => i.id}
           renderItem={({ item }) => (
             <View style={styles.lessonCard}>
               <View style={{ flex: 1 }}>
@@ -212,8 +161,6 @@ const UpdateScreen = () => {
                     ? '✅ Đã có dữ liệu mới nhất'
                     : item.status === 'outdated'
                     ? '⚠️ Cần cập nhật'
-                    : item.status === 'corrupted'
-                    ? '❌ Dữ liệu lỗi'
                     : '⚠️ Chưa có dữ liệu'}
                 </Text>
               </View>

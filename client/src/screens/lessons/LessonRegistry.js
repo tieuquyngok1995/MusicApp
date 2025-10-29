@@ -1,4 +1,4 @@
-import { loadLazyModule } from '@utils/LazyLoader';
+import { loadLazyModule } from '@utils/lazyLoader';
 
 export const CommonSections = {
   Greeting: loadLazyModule(

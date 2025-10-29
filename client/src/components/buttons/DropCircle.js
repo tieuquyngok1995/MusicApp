@@ -1,10 +1,16 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewPropTypes } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const DropCircle = React.forwardRef(({ style }, ref) => {
   return <Animated.View ref={ref} style={[styles.dropCircle, style]} />;
 });
+
+DropCircle.displayName = 'DropCircle';
+
+DropCircle.propTypes = {
+  style: ViewPropTypes.style,
+};
 
 const styles = StyleSheet.create({
   dropCircle: {

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -7,6 +6,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 const { width } = Dimensions.get('window');
 const cardWidth = (width - 48) / 2;
@@ -24,6 +24,18 @@ const LessonCard = ({ lesson, onPress }) => {
       </View>
     </TouchableOpacity>
   );
+};
+
+LessonCard.propTypes = {
+  lesson: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    image: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.object, 
+    ]),
+  }).isRequired,
+  onPress: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

@@ -1,8 +1,16 @@
-import { TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ViewPropTypes,
+} from 'react-native';
 import Sound from 'react-native-sound';
+import PropTypes from 'prop-types';
 
 const NoteButton = ({ soundSource, imageSource, style }) => {
   const playSound = () => {
+    if (!soundSource) return;
+
     const noteSound = new Sound(soundSource, Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log('Failed to load the sound', error);
@@ -12,16 +20,26 @@ const NoteButton = ({ soundSource, imageSource, style }) => {
         if (!success) {
           console.log('Sound playback failed');
         }
-        noteSound.release(); // Giải phóng bộ nhớ
+        noteSound.release();
       });
     });
   };
 
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={playSound}>
-      <Image source={imageSource} style={[styles.noteImage, style]} />
+      <Image source={imageSource} style={styles.noteImage} />
     </TouchableOpacity>
   );
+};
+
+NoteButton.propTypes = {
+  soundSource: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  imageSource: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({ uri: PropTypes.string }),
+  ]).isRequired,
+  style: ViewPropTypes.style,
 };
 
 const styles = StyleSheet.create({

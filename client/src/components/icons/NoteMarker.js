@@ -1,5 +1,4 @@
-// NoteMarker.js
-import React from 'react';
+import PropTypes from 'prop-types';
 import { View, Image, StyleSheet } from 'react-native';
 
 export default function NoteMarker({ active, position, icon }) {
@@ -18,6 +17,12 @@ export default function NoteMarker({ active, position, icon }) {
     </View>
   );
 }
+
+NoteMarker.propTypes = {
+  active: PropTypes.bool,
+  position: PropTypes.number.isRequired,
+  icon: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

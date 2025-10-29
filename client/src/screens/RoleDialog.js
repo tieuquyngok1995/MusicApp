@@ -1,5 +1,5 @@
-import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
 export default function RoleDialog({ visible, onSelectRole, onClose }) {
   return (
@@ -31,6 +31,12 @@ export default function RoleDialog({ visible, onSelectRole, onClose }) {
     </Modal>
   );
 }
+
+RoleDialog.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onSelectRole: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   overlay: {

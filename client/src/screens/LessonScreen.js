@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { View, Button, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { clearAllLazyModules } from '@utils/LazyLoader';
+import { clearAllLazyModules } from '@utils/lazyLoader';
 import LessonCommon from '@screens/LessonCommon';
+import PropTypes from 'prop-types';
 
 export default function LessonScreen({ route, navigation }) {
   const { lessonId, isColorRhythm } = route.params ?? {};
@@ -37,3 +37,16 @@ export default function LessonScreen({ route, navigation }) {
     </View>
   );
 }
+
+LessonScreen.propTypes = {
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      lessonId: PropTypes.string,
+      isColorRhythm: PropTypes.bool,
+    }),
+  }),
+  navigation: PropTypes.shape({
+    addListener: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
+  }),
+};

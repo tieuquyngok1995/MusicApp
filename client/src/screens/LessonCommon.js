@@ -7,14 +7,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { LessonRegistry } from '@lessons/LessonRegistry';
-import { clearLazyModule, clearAllLazyModules } from '@utils/LazyLoader';
-import {
-  loadLessonMeta,
-  getLessonVideoUri,
-  listLessonFiles,
-} from '@utils/LessonUtils';
+import { clearLazyModule, clearAllLazyModules } from '@utils/lazyLoader';
+import { loadLessonMeta, getLessonVideoUri } from '@utils/lessonUtils';
 import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '@contexts/AppContext';
+import PropTypes from 'prop-types';
 
 export default function LessonCommon({ lessonId, isColorRhythm }) {
   const [sectionProps, setSectionProps] = useState({});
@@ -248,6 +245,11 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     </View>
   );
 }
+
+LessonCommon.propTypes = {
+  lessonId: PropTypes.string.isRequired,
+  isColorRhythm: PropTypes.bool,
+};
 
 const styles = StyleSheet.create({
   container: {

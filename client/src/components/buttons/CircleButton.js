@@ -1,7 +1,6 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 import Sound from 'react-native-sound';
-import { Pressable } from 'react-native';
+import PropTypes from 'prop-types';
 
 const CircleButton = ({ color = '#3498db', audioFile, style }) => {
   const playAudio = () => {
@@ -9,10 +8,12 @@ const CircleButton = ({ color = '#3498db', audioFile, style }) => {
 
     const sound = new Sound(audioFile, Sound.MAIN_BUNDLE, error => {
       if (error) {
+        console.warn('Không thể phát âm thanh:', error);
         return;
       }
       sound.play(success => {
         if (!success) {
+          console.warn('Phát âm thanh thất bại');
         }
         sound.release();
       });
@@ -26,6 +27,12 @@ const CircleButton = ({ color = '#3498db', audioFile, style }) => {
       android_disableSound={true}
     />
   );
+};
+
+CircleButton.propTypes = {
+  color: PropTypes.string,
+  audioFile: PropTypes.string.isRequired,
+  style: PropTypes.object,
 };
 
 const styles = StyleSheet.create({

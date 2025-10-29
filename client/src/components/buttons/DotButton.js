@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Animated, { runOnJS } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import PropTypes from 'prop-types';
 
 const DotButton = ({
   dot,
@@ -18,21 +18,19 @@ const DotButton = ({
   };
 
   const pan = Gesture.Pan()
-    .onBegin(() => {
-      runOnJS(onPanResponderGrant)(dot);
-    })
-    .onUpdate(event => {
+    .onBegin(() => runOnJS(onPanResponderGrant)(dot))
+    .onUpdate(event =>
       runOnJS(onPanResponderMove)(dot, {
         dx: event.translationX,
         dy: event.translationY,
-      });
-    })
-    .onEnd(event => {
+      }),
+    )
+    .onEnd(event =>
       runOnJS(onPanResponderRelease)(dot, {
         dx: event.translationX,
         dy: event.translationY,
-      });
-    });
+      }),
+    );
 
   return (
     <GestureDetector gesture={pan}>
@@ -46,9 +44,23 @@ const DotButton = ({
             opacity: 1,
           },
         ]}
-      ></Animated.View>
+      />
     </GestureDetector>
   );
+};
+
+DotButton.propTypes = {
+  dot: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    group: PropTypes.string.isRequired,
+  }).isRequired,
+  isDotConnected: PropTypes.func.isRequired,
+  draggedDotId: PropTypes.string,
+  onPanResponderGrant: PropTypes.func.isRequired,
+  onPanResponderMove: PropTypes.func.isRequired,
+  onPanResponderRelease: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
