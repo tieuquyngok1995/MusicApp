@@ -74,5 +74,5 @@ yarn-error.log
 !.yarn/sdks
 !.yarn/versions
 
-/server/content
-/server/data
+/content
+/data
