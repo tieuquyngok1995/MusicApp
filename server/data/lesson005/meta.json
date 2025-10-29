@@ -1,0 +1,45 @@
+{
+  "lessonId": "Lesson005",
+  "title": "Greeting and Singing",
+  "sections": {
+    "greeting": {
+      "type": "lesson",
+      "image": "P.1_background.jpg",
+      "video": "P.1_Hello_Song.mp4"
+    },
+    "singing": {
+      "type": "lesson",
+      "image": "P.1_background.jpg",
+      "video": "P.1_Hello_Song.mp4"
+    },
+    "storyTime": {
+      "type": "lesson",
+      "image": "P.1_background.jpg",
+      "video": "P.1_Hello_Song.mp4"
+    },
+    "colorCoding": [
+      {
+        "type": "lesson",
+        "image": "P.1_background.jpg",
+        "video": "P.1_Hello_Song.mp4"
+      },
+      {
+        "type": "exercise",
+        "image": "P.1_background.jpg",
+        "video": "P.1_Hello_Song.mp4"
+      }
+    ],
+    "goodbye": {
+      "type": "lesson",
+      "image": "P.1_background.jpg",
+      "video": "P.1_Hello_Song.mp4"
+    }
+  },
+  "meta": {
+    "createdBy": "MusicApp Content Team",
+    "version": 1,
+    "language": "vi",
+    "mediaPath": "./media/",
+    "totalSections": 5
+  }
+}

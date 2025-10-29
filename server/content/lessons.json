@@ -1,0 +1,62 @@
+{
+  "lesson001": {
+    "title": "Lessons 001",
+    "version": 1,
+    "hash": "3966393f8e42902e76bb172cbd948d33fa9c75cccd8fda772a296994886d7b15",
+    "apiUrl": "/api/lessons/lesson001/download/"
+  },
+  "lesson002": {
+    "title": "Lessons 002",
+    "version": 1,
+    "hash": "b3eeb054b95ccfecc4f79245089e31faa913d738f582f875a528cb405caceabe",
+    "apiUrl": "/api/lessons/lesson002/download/"
+  },
+  "lesson003": {
+    "title": "Lessons 003",
+    "version": 1,
+    "hash": "b08e2af3848c46bed6bbef5ddf121236fd3f101261cddb58b385ca7ce32076c0",
+    "apiUrl": "/api/lessons/lesson003/download/"
+  },
+  "lesson004": {
+    "title": "Lessons 004",
+    "version": 1,
+    "hash": "3acb17c510fd6fefa145ab55844d68242b942d3b3c2bb338218c6c36e1582037",
+    "apiUrl": "/api/lessons/lesson004/download/"
+  },
+  "lesson005": {
+    "title": "Lessons 005",
+    "version": 1,
+    "hash": "558f41a0ae649a993f36fefcf49d19bece3de8421369c1d57d2f853743296730",
+    "apiUrl": "/api/lessons/lesson005/download/"
+  },
+  "lesson006": {
+    "title": "Lessons 006",
+    "version": 1,
+    "hash": "3771475a2bb9d8b51eebb04cde8a7f261fa936996df6e22aebc19ca3488a68ca",
+    "apiUrl": "/api/lessons/lesson006/download/"
+  },
+  "lesson007": {
+    "title": "Lessons 007",
+    "version": 1,
+    "hash": "5ebcfbc2388bf1f32813cde862d07681a99a582e3f71fa6d3d8bebe245687587",
+    "apiUrl": "/api/lessons/lesson007/download/"
+  },
+  "lesson008": {
+    "title": "Lessons 008",
+    "version": 1,
+    "hash": "d4de58fa1a4cb0fb18f3a444912757d418cc844878830ff190b74df348f92535",
+    "apiUrl": "/api/lessons/lesson008/download/"
+  },
+  "lesson009": {
+    "title": "Lessons 009",
+    "version": 1,
+    "hash": "111961f1cd71e66c6e56b2a42266abd10afc46ee03d943ffad54fbca38cd9a77",
+    "apiUrl": "/api/lessons/lesson009/download/"
+  },
+  "lesson010": {
+    "title": "Lessons 010",
+    "version": 1,
+    "hash": "ac389487a12e83d7647c97994c4519331f2b46fd1e30955566712402ba7db38a",
+    "apiUrl": "/api/lessons/lesson010/download/"
+  }
+}
