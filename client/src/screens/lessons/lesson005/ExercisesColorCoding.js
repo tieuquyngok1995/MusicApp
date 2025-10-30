@@ -1,7 +1,7 @@
 import { Colors, Audios } from '@constants';
-import { BaseColorCoding } from '@components/BaseColorCoding';
+import { ExerciseColorNotes } from '@components/BaseColorCoding';
 
-export default function ColorCoding() {
+export default function ExercisesColorCoding() {
   const initialButtons = [
     {
       id: 'b1',
@@ -48,23 +48,17 @@ export default function ColorCoding() {
   ];
 
   const dropPositions = [
-    { top: 300, left: 50 },
-    { top: 300, left: 150 },
-    { top: 300, left: 250 },
-    { top: 300, left: 350 },
-    { top: 200, left: 400 },
-    { top: 200, left: 500 },
-    { top: 200, left: 600 },
-    { top: 200, left: 700 },
-    { top: 300, left: 750 },
-    { top: 300, left: 850 },
-    { top: 200, left: 900 },
-    { top: 200, left: 1000 },
-    { top: 300, left: 1050 },
+    { text: 'A', position: { top: 150, left: 100 } },
+    { text: 'B', position: { top: 150, left: 250 } },
+    { text: 'C', position: { top: 150, left: 400 } },
+    { text: 'D', position: { top: 150, left: 550 } },
+    { text: 'E', position: { top: 150, left: 700 } },
+    { text: 'F', position: { top: 150, left: 850 } },
+    { text: 'G', position: { top: 150, left: 1000 } },
   ];
 
   return (
-    <BaseColorCoding
+    <ExerciseColorNotes
       dropPositions={dropPositions}
       initialButtons={initialButtons}
     />

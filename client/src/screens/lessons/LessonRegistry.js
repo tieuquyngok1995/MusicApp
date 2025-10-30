@@ -40,4 +40,34 @@ export const LessonRegistry = {
       'lesson002-ExercisesRhythms',
     ),
   },
+  lesson003: {
+    ...CommonSections,
+    StoryTime: loadLazyModule(
+      () => import('@lessons/lesson003/StoryTime'),
+      'lesson003-StoryTime',
+    ),
+    LessonColorCoding: loadLazyModule(
+      () => import('@lessons/lesson003/LessonColorCoding'),
+      'lesson003-LessonColorCoding',
+    ),
+    ExercisesColorCoding: loadLazyModule(
+      () => import('@lessons/lesson003/ExercisesColorCoding'),
+      'lesson003-ExercisesColorCoding',
+    ),
+  },
+  lesson005: {
+    ...CommonSections,
+    StoryTime: loadLazyModule(
+      () => import('@lessons/lesson005/StoryTime'),
+      'lesson005-StoryTime',
+    ),
+    LessonColorCoding: loadLazyModule(
+      () => import('@lessons/lesson005/LessonColorCoding'),
+      'lesson005-LessonColorCoding',
+    ),
+    ExercisesColorCoding: loadLazyModule(
+      () => import('@lessons/lesson005/ExercisesColorCoding'),
+      'lesson005-ExercisesColorCoding',
+    ),
+  },
 };

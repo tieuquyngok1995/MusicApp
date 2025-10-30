@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Button,
   FlatList,
   TouchableOpacity,
   StyleSheet,
@@ -15,7 +14,7 @@ const defaultLessons = Array.from({ length: 32 }).map((_, i) => ({
   id: `lesson${(i + 1).toString().padStart(3, '0')}`,
   title: `Bài ${i + 1}`,
   description: `Mô tả cho bài học ${i + 1}`,
-  isColorRhythm: i / 2 !== 0,
+  isColorRhythm: (i + 1) % 2 === 0,
   version: '—',
   apiUrl: '',
   hash: '',
@@ -78,8 +77,6 @@ export default function SettingScreen() {
         <Text style={styles.backText}>⬅ Quay lại</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Chọn bài học để kích hoạt</Text>
-
       {/* Danh sách dạng lưới 4 cột */}
       <FlatList
         data={lessons}
@@ -100,8 +97,20 @@ export default function SettingScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  backButton: { marginBottom: 8 },
-  backText: { color: 'blue', fontSize: 16 },
+  backButton: {
+    marginBottom: 8,
+    backgroundColor: '#0077b6',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    width: 120,
+  },
+  backText: {
+    color: '#caf0f8',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   title: { fontSize: 18, marginVertical: 8 },
   listContainer: {
     paddingBottom: 80, // chừa chỗ cho nút lưu

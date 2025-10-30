@@ -69,7 +69,7 @@ export function clearAllLazyModules() {
   const moduleCount = moduleCache.size;
   const lazyCount = lazyCache.size;
   console.log(
-    `[Lazy] 🧹 Clearing all cached modules (${moduleCount} modules, ${lazyCount} lazy components)`,
+    `[Lazy] Clearing all cached modules (${moduleCount} modules, ${lazyCount} lazy components)`,
   );
 
   moduleCache.clear();

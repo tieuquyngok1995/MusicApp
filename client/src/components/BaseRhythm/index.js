@@ -3,11 +3,7 @@ import { View, Text, TouchableOpacity, Animated, Image } from 'react-native';
 import Sound from 'react-native-sound';
 import PropTypes from 'prop-types';
 import DefaultNoteIcon from '@assets/icons/note-crotchet.png';
-import {
-  styles as defaultStyles,
-  PROGRESS_WIDTH,
-  PROGRESS_BAR_PADDING,
-} from './styles';
+import { styles, PROGRESS_WIDTH, PROGRESS_BAR_PADDING } from './styles';
 
 export default function BaseRhythm({
   duration = 8,
@@ -150,7 +146,7 @@ export default function BaseRhythm({
         <View
           key={n.id}
           style={[
-            defaultStyles.marker,
+            styles.marker,
             styleOverrides.marker,
             { left, transform: [{ translateX: -15 }] },
           ]}
@@ -158,7 +154,7 @@ export default function BaseRhythm({
           <Image
             source={noteIcon}
             style={[
-              defaultStyles.noteIcon,
+              styles.noteIcon,
               styleOverrides.noteIcon,
               { tintColor: activeNoteId === n.id ? '#4caf50' : '#000' },
             ]}
@@ -173,22 +169,20 @@ export default function BaseRhythm({
   });
 
   return (
-    <View style={[defaultStyles.container, styleOverrides.container]}>
-      <View style={defaultStyles.progressOuter}>
-        <View
-          style={[defaultStyles.progressTrack, styleOverrides.progressTrack]}
-        />
-        <View style={defaultStyles.markersContainer}>{renderMarkers()}</View>
+    <View style={[styles.container, styleOverrides.container]}>
+      <View style={styles.progressOuter}>
+        <View style={[styles.progressTrack, styleOverrides.progressTrack]} />
+        <View style={styles.markersContainer}>{renderMarkers()}</View>
         <Animated.View
           style={[
-            defaultStyles.progressFill,
+            styles.progressFill,
             styleOverrides.progressFill,
             { width: progressBarWidth },
           ]}
         />
         <Animated.View
           style={[
-            defaultStyles.playHead,
+            styles.playHead,
             styleOverrides.playHead,
             {
               left: Animated.add(
@@ -201,29 +195,24 @@ export default function BaseRhythm({
         />
       </View>
 
-      <View style={defaultStyles.controls}>
-        <TouchableOpacity style={defaultStyles.btn} onPress={onRewind}>
-          <Text style={defaultStyles.btnText}>{'<< 1s'}</Text>
+      <View style={styles.controls}>
+        <TouchableOpacity style={styles.btn} onPress={onRewind}>
+          <Text style={styles.btnText}>{'<< 1s'}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[defaultStyles.btn, defaultStyles.btnFixed]}
+          style={[styles.btn, styles.btnFixed]}
           onPress={isPlaying ? onPause : onPlay}
         >
-          <Text style={defaultStyles.btnText}>
-            {isPlaying ? 'Pause' : 'Play'}
-          </Text>
+          <Text style={styles.btnText}>{isPlaying ? 'Pause' : 'Play'}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={defaultStyles.btn} onPress={onForward}>
-          <Text style={defaultStyles.btnText}>{'1s >>'}</Text>
+        <TouchableOpacity style={styles.btn} onPress={onForward}>
+          <Text style={styles.btnText}>{'1s >>'}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[defaultStyles.btn, defaultStyles.btnAlt]}
-          onPress={onReset}
-        >
-          <Text style={defaultStyles.btnText}>Reset</Text>
+        <TouchableOpacity style={[styles.btn, styles.btnAlt]} onPress={onReset}>
+          <Text style={styles.btnText}>Reset</Text>
         </TouchableOpacity>
       </View>
 
@@ -233,7 +222,7 @@ export default function BaseRhythm({
           {[0.75, 1, 1.5, 2].map(t => (
             <TouchableOpacity
               key={t}
-              style={defaultStyles.chip}
+              style={styles.chip}
               onPress={() => setTempo(t)}
             >
               <Text>{t}x</Text>

@@ -18,11 +18,11 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
   const [SectionComp, setSectionComp] = useState(null);
   const [sectionKey, setSectionKey] = useState(null);
   const [lessonMeta, setLessonMeta] = useState(null);
+  const [loadError, setLoadError] = useState(false);
   const navigation = useNavigation();
 
   const { role } = useAppContext();
 
-  // 🎨 Màu cố định cho mỗi phần
   const colors = {
     Greeting: '#FFCC80',
     Singing: '#81C784',
@@ -33,36 +33,35 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     Goodbye: '#E57373',
   };
 
-  // 🎯 Auto-open ColorCoding cho student
+  // Auto-open ColorCoding cho student
   useEffect(() => {
     (async () => {
-      // 1️⃣ Load metadata bài học
-      const meta = await loadLessonMeta(lessonId);
-      if (!meta) {
-        console.warn(`[LessonCommon] Không tìm thấy meta cho bài ${lessonId}`);
-        return;
-      }
-      // 2️⃣ Lưu vào state để sử dụng
-      setLessonMeta(meta);
+      try {
+        const meta = await loadLessonMeta(lessonId);
+        if (!meta) {
+          console.warn(
+            `[LessonCommon] Không tìm thấy meta cho bài ${lessonId}`,
+          );
+          setLoadError(true);
+          return;
+        }
+        setLessonMeta(meta);
 
-      // 3️⃣ Auto-open section cho student
-      if (role === 'student' && !SectionComp) {
-        console.log('[LessonCommon] Student detected, auto-opening section...');
-        const sectionName = isColorRhythm
-          ? 'ExercisesRhythms'
-          : 'ExercisesColorCoding';
-        const sectionInfo = meta.sections[sectionName];
-        if (!sectionInfo) return;
-
-        openSection(sectionName, {
-          videoUri: getLessonVideoUri(lessonId, sectionInfo.video),
-          lyrics: sectionInfo.lyrics,
-        });
+        if (role === 'student' && !SectionComp) {
+          if (isColorRhythm) {
+            openSection('ExercisesRhythms');
+          } else {
+            openSection('ExercisesColorCoding');
+          }
+        }
+      } catch (err) {
+        console.error('[LessonCommon] Lỗi khi load meta:', err);
+        setLoadError(true);
       }
     })();
   }, [lessonId, role, SectionComp]);
 
-  // 🧩 Hàm mở section với xử lý lỗi
+  // Hàm mở section với xử lý lỗi
   const openSection = (sectionName, props = {}) => {
     try {
       // Kiểm tra lesson tồn tại
@@ -101,7 +100,7 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     }
   };
 
-  // 🔙 Đóng section
+  // Đóng section
   const closeSection = () => {
     console.log(`[LessonCommon] Đóng section: ${sectionKey}`);
     if (sectionKey) clearLazyModule(sectionKey);
@@ -125,15 +124,15 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     }
   };
 
-  // ⚡ Hiển thị section đã mở
+  // Hiển thị section đã mở
   if (SectionComp) {
     const Comp = SectionComp;
     return (
       <View style={{ flex: 1 }}>
+        {/* Header */}
         <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
           <Text style={styles.backText}>⬅ Quay lại</Text>
         </TouchableOpacity>
-
         <Suspense
           fallback={
             <View style={styles.loading}>
@@ -148,7 +147,25 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     );
   }
 
-  // 🔄 Loading cho student
+  if (loadError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>Không tải được bài học</Text>
+        <Text style={styles.errorText}>
+          Bài học này chưa có nội dung hoặc gặp lỗi khi tải. Vui lòng thử lại
+          sau.
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.retryButton}
+        >
+          <Text style={styles.retryText}>Quay lại</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // Loading cho student
   if (role === 'student') {
     return (
       <View style={styles.loading}>
@@ -158,7 +175,7 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     );
   }
 
-  // ⚙️ Render cặp Row3
+  // Render cặp Row3
   const renderPairRow = () => {
     if (isColorRhythm) {
       return (
@@ -199,9 +216,10 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
     }
   };
 
-  // 🧱 Danh sách sections (teacher)
+  // Danh sách sections (teacher)
   return (
     <View style={styles.container}>
+      {/* Header */}
       <TouchableOpacity onPress={goHome} style={styles.backButton}>
         <Text style={styles.backText}>⬅ Quay lại</Text>
       </TouchableOpacity>
@@ -280,11 +298,20 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   backButton: {
-    padding: 10,
+    marginLeft: 4,
+    marginTop: 8,
+    marginBottom: 8,
+    backgroundColor: '#0077b6',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    width: 120,
   },
   backText: {
-    color: 'blue',
+    color: '#caf0f8',
     fontSize: 16,
+    fontWeight: '600',
   },
   loading: {
     flex: 1,

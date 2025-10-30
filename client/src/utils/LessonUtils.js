@@ -15,7 +15,7 @@ export async function loadLessonMeta(lessonId) {
     const raw = await RNFS.readFile(metaPath, 'utf8');
     return JSON.parse(raw);
   } catch (err) {
-    console.error(`[loadLessonMeta] Lỗi đọc meta.json của ${lessonId}:`, err);
+    console.warn(`[loadLessonMeta] Lỗi đọc meta.json của ${lessonId}:`, err);
     return null;
   }
 }

@@ -140,6 +140,13 @@ const UpdateScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <Text style={styles.backText}>⬅ Quay lại</Text>
+      </TouchableOpacity>
       <Text style={styles.header}>Kiểm tra dữ liệu bài học</Text>
       {lessons.length === 0 ? (
         <Text style={styles.emptyText}>
@@ -179,12 +186,6 @@ const UpdateScreen = () => {
           )}
         />
       )}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.backText}>⬅ Quay lại</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -235,15 +236,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   backButton: {
-    marginTop: 15,
-    backgroundColor: '#888',
-    paddingVertical: 10,
-    borderRadius: 30,
+    marginBottom: 8,
+    backgroundColor: '#0077b6',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     alignItems: 'center',
+    width: 120,
   },
   backText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: '#caf0f8',
+    fontSize: 16,
+    fontWeight: '600',
   },
   emptyText: {
     textAlign: 'center',

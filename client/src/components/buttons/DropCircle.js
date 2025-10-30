@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, ViewPropTypes } from 'react-native';
+import { StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Animated from 'react-native-reanimated';
 
 const DropCircle = React.forwardRef(({ style }, ref) => {
@@ -9,7 +10,7 @@ const DropCircle = React.forwardRef(({ style }, ref) => {
 DropCircle.displayName = 'DropCircle';
 
 DropCircle.propTypes = {
-  style: ViewPropTypes.style,
+  style: PropTypes.object,
 };
 
 const styles = StyleSheet.create({

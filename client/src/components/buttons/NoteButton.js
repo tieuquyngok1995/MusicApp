@@ -1,9 +1,4 @@
-import {
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ViewPropTypes,
-} from 'react-native';
+import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Sound from 'react-native-sound';
 import PropTypes from 'prop-types';
 
@@ -39,7 +34,7 @@ NoteButton.propTypes = {
     PropTypes.number,
     PropTypes.shape({ uri: PropTypes.string }),
   ]).isRequired,
-  style: ViewPropTypes.style,
+  style: PropTypes.object,
 };
 
 const styles = StyleSheet.create({
