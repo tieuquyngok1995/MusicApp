@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedProps,
+  runOnJS,
+} from 'react-native-reanimated';
 import Svg, { Line } from 'react-native-svg';
 import PropTypes from 'prop-types';
 import { DotButton, CircleButton } from '@components/buttons';
@@ -9,83 +14,130 @@ import { styles } from './styles';
 
 const { width, height } = Dimensions.get('window');
 
+// Tạo Animated Line component
+const AnimatedLine = Animated.createAnimatedComponent(Line);
+
 export default function ExerciseMatchColors({
   dotsA = [],
   dotsB = [],
   styleOverrides = {},
 }) {
-  const allDots = [...dotsA, ...dotsB];
+  const allDots = useMemo(() => [...dotsA, ...dotsB], [dotsA, dotsB]);
   const [connections, setConnections] = useState([]);
-  const [currentLine, setCurrentLine] = useState(null);
   const [draggedDotId, setDraggedDotId] = useState(null);
+  const [startDot, setStartDot] = useState(null);
 
-  const isDotConnected = dotId =>
-    connections.some(c => c.startId === dotId || c.endId === dotId);
+  // Shared values cho line animation (chạy trên UI thread)
+  const lineX1 = useSharedValue(0);
+  const lineY1 = useSharedValue(0);
+  const lineX2 = useSharedValue(0);
+  const lineY2 = useSharedValue(0);
+  const isDrawing = useSharedValue(false);
 
-  const canConnect = (dot1, dot2) => dot1.group !== dot2.group;
-
-  const isNearDot = (x, y, dot) => {
-    const distance = Math.sqrt((x - dot.x) ** 2 + (y - dot.y) ** 2);
-    return distance < 50;
-  };
-
-  const handlePanResponderGrant = dot => {
-    if (isDotConnected(dot.id)) return;
-    setDraggedDotId(dot.id);
-    setCurrentLine({
-      x1: dot.x,
-      y1: dot.y,
-      x2: dot.x,
-      y2: dot.y,
+  const connectedDotsSet = useMemo(() => {
+    const set = new Set();
+    connections.forEach(c => {
+      set.add(c.startId);
+      set.add(c.endId);
     });
-  };
+    return set;
+  }, [connections]);
 
-  const handlePanResponderMove = (dot, gestureState) => {
-    if (isDotConnected(dot.id)) return;
-    const newX = dot.x + gestureState.dx;
-    const newY = dot.y + gestureState.dy;
-    setCurrentLine(() => ({
+  const isDotConnected = useCallback(
+    dotId => connectedDotsSet.has(dotId),
+    [connectedDotsSet],
+  );
+
+  const canConnect = useCallback((dot1, dot2) => dot1.group !== dot2.group, []);
+
+  const isNearDot = useCallback((x, y, dot) => {
+    const dx = x - dot.x;
+    const dy = y - dot.y;
+    const distanceSquared = dx * dx + dy * dy;
+    return distanceSquared < 2500;
+  }, []);
+
+  const handlePanResponderGrant = useCallback(
+    dot => {
+      if (isDotConnected(dot.id)) return;
+      setDraggedDotId(dot.id);
+      setStartDot(dot);
+
+      // Cập nhật trực tiếp trên UI thread
+      lineX1.value = dot.x;
+      lineY1.value = dot.y;
+      lineX2.value = dot.x;
+      lineY2.value = dot.y;
+      isDrawing.value = true;
+    },
+    [isDotConnected, lineX1, lineY1, lineX2, lineY2, isDrawing],
+  );
+
+  const handlePanResponderMove = useCallback(
+    (dot, gestureState) => {
+      if (isDotConnected(dot.id)) return;
+
+      // Cập nhật trực tiếp trên UI thread - KHÔNG CÓ setState
+      lineX2.value = dot.x + gestureState.dx;
+      lineY2.value = dot.y + gestureState.dy;
+    },
+    [isDotConnected, lineX2, lineY2],
+  );
+
+  const addConnection = useCallback((dot, targetDot) => {
+    const newConnection = {
+      id: `${dot.id}-${targetDot.id}`,
+      startId: dot.id,
+      endId: targetDot.id,
       x1: dot.x,
       y1: dot.y,
-      x2: newX,
-      y2: newY,
-    }));
-  };
+      x2: targetDot.x,
+      y2: targetDot.y,
+    };
+    setConnections(prev => [...prev, newConnection]);
+  }, []);
 
-  const handlePanResponderRelease = (dot, gestureState) => {
-    if (isDotConnected(dot.id)) return;
-    const endX = dot.x + gestureState.dx;
-    const endY = dot.y + gestureState.dy;
+  const handlePanResponderRelease = useCallback(
+    (dot, gestureState) => {
+      if (isDotConnected(dot.id)) return;
 
-    const targetDot = allDots.find(
-      d =>
-        d.id !== dot.id &&
-        !isDotConnected(d.id) &&
-        canConnect(dot, d) &&
-        isNearDot(endX, endY, d),
-    );
+      const endX = dot.x + gestureState.dx;
+      const endY = dot.y + gestureState.dy;
 
-    if (targetDot) {
-      const newConnection = {
-        id: `${dot.id}-${targetDot.id}`,
-        startId: dot.id,
-        endId: targetDot.id,
-        x1: dot.x,
-        y1: dot.y,
-        x2: targetDot.x,
-        y2: targetDot.y,
-      };
-      setConnections(prev => [...prev, newConnection]);
-    }
+      const targetDot = allDots.find(
+        d =>
+          d.id !== dot.id &&
+          !isDotConnected(d.id) &&
+          canConnect(dot, d) &&
+          isNearDot(endX, endY, d),
+      );
 
-    setCurrentLine(null);
-    setDraggedDotId(null);
-  };
+      if (targetDot) {
+        addConnection(dot, targetDot);
+      }
+
+      // Reset drawing state
+      isDrawing.value = false;
+      setDraggedDotId(null);
+      setStartDot(null);
+    },
+    [allDots, isDotConnected, canConnect, isNearDot, addConnection, isDrawing],
+  );
+
+  // Animated props cho line đang vẽ
+  const animatedLineProps = useAnimatedProps(() => ({
+    x1: lineX1.value,
+    y1: lineY1.value,
+    x2: lineX2.value,
+    y2: lineY2.value,
+    opacity: isDrawing.value ? 1 : 0,
+  }));
 
   return (
     <GestureHandlerRootView style={[styles.container, styleOverrides]}>
       <View>
         <Svg height={height} width={width} style={styles.svg}>
+          {/* Lines đã hoàn thành */}
           {connections.map(c => (
             <Line
               key={c.id}
@@ -98,17 +150,13 @@ export default function ExerciseMatchColors({
             />
           ))}
 
-          {currentLine && (
-            <Line
-              x1={currentLine.x1}
-              y1={currentLine.y1}
-              x2={currentLine.x2}
-              y2={currentLine.y2}
-              stroke="#2196F3"
-              strokeWidth="3"
-              strokeDasharray="5,5"
-            />
-          )}
+          {/* Line đang vẽ - Animated với Reanimated */}
+          <AnimatedLine
+            animatedProps={animatedLineProps}
+            stroke="#2196F3"
+            strokeWidth="3"
+            strokeDasharray="5,5"
+          />
         </Svg>
 
         {allDots.map(dot =>

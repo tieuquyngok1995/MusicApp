@@ -6,10 +6,10 @@ const AppContext = createContext();
 
 // 2. Provider
 export const AppProvider = ({ children }) => {
-  const [role, setRole] = useState(null); // teacher / student
-  const [lessons, setLessons] = useState([]); // danh sách bài học
-  const [user, setUser] = useState(null); // thông tin user
-  const [settings, setSettings] = useState({}); // các config khác
+  const [role, setRole] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [user, setUser] = useState(null);
+  const [settings, setSettings] = useState({});
 
   // Ví dụ thêm các hàm helper
   const resetApp = () => {
