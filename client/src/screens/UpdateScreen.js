@@ -84,7 +84,7 @@ const UpdateScreen = () => {
       setLessons(updatedLessons.filter(l => l.active));
     } catch (error) {
       console.error('Lỗi loadLessons:', error);
-      Alert.alert('Lỗi', 'Không thể tải danh sách bài học');
+      Alert.alert('Lỗi', `Không thể tải danh sách bài học  ${error}`);
     } finally {
       setLoading(false);
     }
