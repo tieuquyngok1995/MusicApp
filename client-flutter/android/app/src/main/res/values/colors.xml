@@ -1,0 +1,4 @@
+<resources>
+    <!-- màu nền splash screen -->
+    <color name="bgColor">#FFFFFF</color>
+</resources>
