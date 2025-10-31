@@ -4,35 +4,35 @@
   "sections": {
     "greeting": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.5_background.jpg",
+      "video": "P.5_Hello_Song.mp4"
     },
     "singing": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.5_background.jpg",
+      "video": "P.5_Hello_Song.mp4"
     },
     "storyTime": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.5_background.jpg",
+      "video": "P.5_Hello_Song.mp4"
     },
     "colorCoding": [
       {
         "type": "lesson",
-        "image": "P.1_background.jpg",
-        "video": "P.1_Hello_Song.mp4"
+        "image": "P.5_background.jpg",
+        "video": "P.5_Hello_Song.mp4"
       },
       {
         "type": "exercise",
-        "image": "P.1_background.jpg",
-        "video": "P.1_Hello_Song.mp4"
+        "image": "P.5_background.jpg",
+        "video": "P.5_Hello_Song.mp4"
       }
     ],
     "goodbye": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.5_background.jpg",
+      "video": "P.5_Hello_Song.mp4"
     }
   },
   "meta": {

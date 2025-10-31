@@ -1,38 +1,38 @@
 {
-  "lessonId": "lesson001",
+  "lessonId": "lesson004",
   "title": "Greeting and Singing",
   "sections": {
     "greeting": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.4_background.jpg",
+      "video": "P.4_Hello_Song.mp4"
     },
     "singing": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.4_background.jpg",
+      "video": "P.4_Hello_Song.mp4"
     },
     "colorIdentifying": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.4_background.jpg",
+      "video": "P.4_Hello_Song.mp4"
     },
     "rhythms": [
       {
         "type": "lesson",
-        "image": "P.1_background.jpg",
-        "video": "P.1_Hello_Song.mp4"
+        "image": "P.4_background.jpg",
+        "video": "P.4_Hello_Song.mp4"
       },
       {
         "type": "exercise",
-        "image": "P.1_background.jpg",
-        "video": "P.1_Hello_Song.mp4"
+        "image": "P.4_background.jpg",
+        "video": "P.4_Hello_Song.mp4"
       }
     ],
     "goodbye": {
       "type": "lesson",
-      "image": "P.1_background.jpg",
-      "video": "P.1_Hello_Song.mp4"
+      "image": "P.4_background.jpg",
+      "video": "P.4_Hello_Song.mp4"
     }
   },
   "meta": {
