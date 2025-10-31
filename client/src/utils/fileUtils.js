@@ -12,6 +12,29 @@ export async function checkLessonFolder(lessonId) {
 }
 
 /**
+ * Lấy danh sách tất cả thư mục bài học trong LESSONS_DIR
+ * @returns {Promise<string[]>} Mảng tên thư mục (lessonId)
+ */
+export async function getLessonFolders() {
+  try {
+    const exists = await RNFS.exists(LESSONS_DIR);
+    if (!exists) {
+      return [];
+    }
+
+    const items = await RNFS.readDir(LESSONS_DIR);
+    const folders = items
+      .filter(item => item.isDirectory())
+      .map(item => item.name);
+
+    return folders;
+  } catch (error) {
+    console.error('Lỗi khi lấy danh sách thư mục bài học:', error);
+    return [];
+  }
+}
+
+/**
  * Tạo thư mục lưu bài học nếu chưa có
  */
 export async function ensureLessonFolder(lessonId) {
@@ -47,4 +70,12 @@ export async function downloadLessonZip(url, lessonId) {
   }
 
   return zipPath;
+}
+
+/**
+ * Xóa toàn bộ thư mục của bài học (nếu tồn tại)
+ */
+export async function deleteLessonFolder(lessonId) {
+  const dirPath = `${LESSONS_DIR}/${lessonId}`;
+  await RNFS.unlink(dirPath);
 }

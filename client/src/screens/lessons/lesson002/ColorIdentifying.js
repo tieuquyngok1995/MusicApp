@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { CircleButton } from '@components/buttons';
 import { Colors, Audios } from '@constants';
+import PropTypes from 'prop-types';
 
-export default function ColorIdentifying() {
+export default function ColorIdentifying({ imgUri }) {
   return (
     <ImageBackground
-      source={require('@assets/images/background.jpg')}
+      source={{ uri: imgUri }}
       style={styles.background}
       resizeMode="cover"
     >
@@ -58,6 +59,10 @@ export default function ColorIdentifying() {
     </ImageBackground>
   );
 }
+
+ColorIdentifying.propTypes = {
+  imgUri: PropTypes.string.isRequired,
+};
 
 const styles = StyleSheet.create({
   background: {

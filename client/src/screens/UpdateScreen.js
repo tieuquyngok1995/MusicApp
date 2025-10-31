@@ -8,7 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveLessonStates, loadLessonStates } from '@utils/storage';
 import { useNavigation } from '@react-navigation/native';
 import {
   fetchLessonMetadata,
@@ -19,12 +19,9 @@ import {
   downloadLessonZip,
   unzipLesson,
   checkLessonFolder,
+  getLessonFolders,
+  deleteLessonFolder,
 } from '@utils/fileUtils';
-import RNFS from 'react-native-fs';
-
-// Đường dẫn thư mục gốc lưu dữ liệu
-const LESSONS_DIR = `${RNFS.DocumentDirectoryPath}/lessons`;
-const API_BASE = 'http://172.16.4.38:9891/api/lessons';
 
 const UpdateScreen = () => {
   const navigation = useNavigation();
@@ -35,15 +32,25 @@ const UpdateScreen = () => {
   const loadLessons = useCallback(async () => {
     setLoading(true);
     try {
-      const allLessonsRawStr = await AsyncStorage.getItem('lessonsData');
-      if (!allLessonsRawStr) return setLessons([]);
+      const allLessonsRaw = await loadLessonStates();
+      if (!allLessonsRaw) return setLessons([]);
 
-      const allLessonsRaw = JSON.parse(allLessonsRawStr);
       const activeLessons = allLessonsRaw.filter(l => l.active);
       if (activeLessons.length === 0) return setLessons([]);
 
       const lessonIds = activeLessons.map(l => l.id);
       const latestMetaData = await fetchLessonMetadata(lessonIds);
+
+      const folderNames = await getLessonFolders();
+      for (const folderName of folderNames) {
+        const isActive = lessonIds.includes(folderName);
+        const folderExists = await checkLessonFolder(folderName);
+
+        if (folderExists && !isActive) {
+          console.log(`Xóa thư mục không active: ${folderName}`);
+          await deleteLessonFolder(folderName);
+        }
+      }
 
       let hasChanges = false;
       const updatedLessons = await Promise.all(
@@ -51,23 +58,18 @@ const UpdateScreen = () => {
           const meta = latestMetaData.lessons[lesson.id];
           if (!meta) return lesson;
 
-          const updatedLesson = { ...lesson };
-          ['version', 'hash', 'apiUrl'].forEach(k => {
-            if (!lesson[k] || lesson[k] !== meta[k]) {
-              updatedLesson[k] = meta[k];
-              hasChanges = true;
-            }
-          });
+          if (lesson.hash && lesson.hash === meta.hash) {
+            return lesson;
+          }
+
+          const updatedLesson = { ...lesson, ...meta };
+          hasChanges = true;
 
           const dirExists = await checkLessonFolder(lesson.id);
           if (!dirExists) {
             updatedLesson.status = 'not-exist';
           } else {
-            const isOutdated =
-              !lesson.version ||
-              lesson.version !== meta.version ||
-              !lesson.hash ||
-              lesson.hash !== meta.hash;
+            const isOutdated = !lesson.hash || lesson.hash !== meta.hash;
             updatedLesson.status = isOutdated ? 'outdated' : 'up-to-date';
           }
 
@@ -75,15 +77,10 @@ const UpdateScreen = () => {
         }),
       );
 
-      if (hasChanges)
-        await AsyncStorage.setItem(
-          'lessonsData',
-          JSON.stringify(updatedLessons),
-        );
+      if (hasChanges) await saveLessonStates(updatedLessons);
 
       setLessons(updatedLessons.filter(l => l.active));
     } catch (error) {
-      console.error('Lỗi loadLessons:', error);
       Alert.alert('Lỗi', `Không thể tải danh sách bài học  ${error}`);
     } finally {
       setLoading(false);
@@ -104,15 +101,38 @@ const UpdateScreen = () => {
       await unzipLesson(zipPath, lessonDir);
 
       // cập nhật AsyncStorage
-      const metaRaw = await AsyncStorage.getItem('lessonMeta');
-      const metaData = metaRaw ? JSON.parse(metaRaw) : {};
-      metaData[lesson.id] = {
+      const metaRaw = await loadLessonStates();
+      let metaData = [];
+
+      if (metaRaw) {
+        metaData = typeof metaRaw === 'string' ? JSON.parse(metaRaw) : metaRaw;
+      }
+
+      if (!Array.isArray(metaData)) {
+        if (metaData && typeof metaData === 'object') {
+          metaData = Object.values(metaData);
+        } else {
+          metaData = [];
+        }
+      }
+
+      const updatedLesson = {
         ...lesson,
         status: 'up-to-date',
         updatedAt: new Date().toISOString(),
       };
-      await AsyncStorage.setItem('lessonMeta', JSON.stringify(metaData));
 
+      const existingIndex = metaData.findIndex(item => item.id === lesson.id);
+
+      if (existingIndex !== -1) {
+        metaData[existingIndex] = updatedLesson;
+      } else {
+        metaData.push(updatedLesson);
+      }
+
+      await saveLessonStates(metaData);
+
+      // cập nhật UI list lessons hiện tại
       setLessons(prev =>
         prev.map(l =>
           l.id === lesson.id ? { ...l, status: 'up-to-date' } : l,

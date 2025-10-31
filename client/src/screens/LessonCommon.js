@@ -8,7 +8,11 @@ import {
 } from 'react-native';
 import { LessonRegistry } from '@lessons/LessonRegistry';
 import { clearLazyModule, clearAllLazyModules } from '@utils/lazyLoader';
-import { loadLessonMeta, getLessonVideoUri } from '@utils/lessonUtils';
+import {
+  loadLessonMeta,
+  getLessonVideoUri,
+  getLessonImageUri,
+} from '@utils/lessonUtils';
 import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '@contexts/AppContext';
 import PropTypes from 'prop-types';
@@ -182,7 +186,14 @@ export default function LessonCommon({ lessonId, isColorRhythm }) {
         <>
           <TouchableOpacity
             style={[styles.card, { backgroundColor: colors.ColorIdentifying }]}
-            onPress={() => openSection('ColorIdentifying')}
+            onPress={() =>
+              openSection('ColorIdentifying', {
+                imgUri: getLessonImageUri(
+                  lessonMeta.lessonId,
+                  lessonMeta.sections.colorIdentifying.image,
+                ),
+              })
+            }
           >
             <Text style={styles.cardText}>Color Identifying</Text>
           </TouchableOpacity>

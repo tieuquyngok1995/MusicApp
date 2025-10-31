@@ -1,16 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import {
-  View,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { useCallback, useState, useEffect } from 'react';
+import { View, FlatList, Text, StyleSheet, Alert } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppContext } from '@contexts/AppContext';
 import { LessonCard, RoleDialog } from '@screens';
+import { AppButton } from '@components/buttons';
 import img from '@assets/images/image.jpg';
 
 const bottomBarHeight = 60;
@@ -138,15 +132,13 @@ const HomeScreen = () => {
       />
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.button} onPress={handleSettings}>
-          <Text style={styles.buttonText}>Settings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#e67e22' }]}
+        <AppButton title="Settings" onPress={handleSettings} mode="primary" />
+        <AppButton
+          title="Update"
           onPress={handleUpdate}
-        >
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
+          mode="primary"
+          style={[{ backgroundColor: '#e67e22' }]}
+        />
       </View>
     </View>
   );
@@ -170,16 +162,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    backgroundColor: '#3498db',
-    borderRadius: 30,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
   },
 });
 

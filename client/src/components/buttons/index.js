@@ -3,3 +3,4 @@ export { default as NoteButton } from './NoteButton';
 export { default as CircleButton } from './CircleButton';
 export { default as DropCircle } from './DropCircle';
 export { default as DraggableButton } from './DraggableButton';
+export { default as AppButton } from './AppButton';

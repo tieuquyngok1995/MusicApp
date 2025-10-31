@@ -9,13 +9,13 @@ const LESSONS_DIR = `${RNFS.DocumentDirectoryPath}/lessons`;
  * @returns {Promise<Object|null>} object meta hoặc null nếu lỗi
  */
 export async function loadLessonMeta(lessonId) {
-  const metaPath = `${LESSONS_DIR}/${lessonId}/meta.json`;
-
   try {
-    const raw = await RNFS.readFile(metaPath, 'utf8');
+    const raw = await RNFS.readFile(
+      `${LESSONS_DIR}/${lessonId}/meta.json`,
+      'utf8',
+    );
     return JSON.parse(raw);
   } catch (err) {
-    console.warn(`[loadLessonMeta] Lỗi đọc meta.json của ${lessonId}:`, err);
     return null;
   }
 }
@@ -28,6 +28,16 @@ export async function loadLessonMeta(lessonId) {
  */
 export function getLessonVideoUri(lessonId, videoFileName) {
   return `file://${LESSONS_DIR}/${lessonId}/${videoFileName}`;
+}
+
+/**
+ * Lấy đường dẫn URI của ảnh trong bài học
+ * @param {string} lessonId - ID bài học
+ * @param {string} imageFileName - tên file ảnh, ví dụ 'cover.png' hoặc 'thumbnail.jpg'
+ * @returns {string} file URI dạng 'file://...'
+ */
+export function getLessonImageUri(lessonId, imageFileName) {
+  return `file://${LESSONS_DIR}/${lessonId}/${imageFileName}`;
 }
 
 export async function listLessonFiles() {

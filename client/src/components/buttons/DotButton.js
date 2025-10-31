@@ -38,8 +38,8 @@ const DotButton = ({
         style={[
           styles.dot,
           {
-            left: dot.x - 12,
-            top: dot.y - 12,
+            left: dot.x - 16,
+            top: dot.y - 16,
             backgroundColor: getDotColor(),
             opacity: 1,
           },
@@ -65,9 +65,9 @@ DotButton.propTypes = {
 
 const styles = StyleSheet.create({
   dot: {
-    width: 25,
-    height: 25,
-    borderRadius: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',

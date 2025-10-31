@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { AppButton } from '@components/buttons';
 import { saveLessonStates, loadLessonStates } from '@utils/storage';
 import img from '@assets/images/image.jpg';
 
@@ -15,10 +16,12 @@ const defaultLessons = Array.from({ length: 32 }).map((_, i) => ({
   title: `Bài ${i + 1}`,
   description: `Mô tả cho bài học ${i + 1}`,
   isColorRhythm: (i + 1) % 2 === 0,
+  image: img,
   version: '—',
   apiUrl: '',
   hash: '',
-  image: img,
+  status: '',
+  updatedAt: null,
   active: false,
 }));
 
@@ -32,8 +35,18 @@ export default function SettingScreen() {
       if (saved.length > 0) {
         const merged = defaultLessons.map(l => {
           const savedLesson = saved.find(s => s.id === l.id);
-          return savedLesson ? { ...l, active: savedLesson.active } : l;
+
+          if (savedLesson) {
+            return {
+              ...l,
+              active: savedLesson.active,
+              ...savedLesson,
+            };
+          }
+
+          return l;
         });
+
         setLessons(merged);
       }
     };
@@ -54,7 +67,22 @@ export default function SettingScreen() {
   };
 
   const handleSave = async () => {
-    await saveLessonStates(lessons);
+    // Reset các lesson không active về giá trị mặc định
+    const normalizedLessons = lessons.map(l => {
+      if (!l.active) {
+        return {
+          ...l,
+          version: '—',
+          apiUrl: '',
+          hash: '',
+          status: '',
+          updatedAt: null,
+        };
+      }
+      return l;
+    });
+
+    await saveLessonStates(normalizedLessons);
     alert('Đã lưu danh sách bài học!');
   };
 
@@ -88,9 +116,12 @@ export default function SettingScreen() {
       />
 
       {/* Footer */}
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>💾 Lưu lựa chọn</Text>
-      </TouchableOpacity>
+      <AppButton
+        title="Save Settings"
+        onPress={handleSave}
+        mode="primary"
+        style={{ width: 200, left: '50%', transform: [{ translateX: -100 }] }}
+      />
     </View>
   );
 }
